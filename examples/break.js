@@ -28,9 +28,9 @@ function asserting() {
 
 function clear() {
 	console.log('clearing');
-	serialPort.set({br:false}, function(err, something) {
+	serialPort.set({brk:false}, function(err, something) {
 	  console.log('clear');
-		done();
+		setTimeout(done,5000);
 	});
 }
 
