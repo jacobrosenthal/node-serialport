@@ -164,7 +164,7 @@ public:
 };
 
 void EIO_Set(uv_work_t* req) {
-  // SetBaton* data = static_cast<SetBaton*>(req->data);
+  SetBaton* data = static_cast<SetBaton*>(req->data);
 
   // int bits;
   // ioctl( data->fd, TIOCMGET, &bits );
@@ -186,6 +186,15 @@ void EIO_Set(uv_work_t* req) {
   // if (data->dsr) {
   //   bits |= TIOCM_DSR;
   // }
+
+  //todo check these returns
+  if (data->brk) {
+    SetCommBreak(data->fd);
+  }else{
+    ClearCommBreak(data->fd);
+  }
+
+  data->result = 0;
 
   // data->result = ioctl( data->fd, TIOCMSET, &bits );
 
