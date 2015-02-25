@@ -166,37 +166,40 @@ public:
 void EIO_Set(uv_work_t* req) {
   SetBaton* data = static_cast<SetBaton*>(req->data);
 
-  // int bits;
-  // ioctl( data->fd, TIOCMGET, &bits );
+  if (data->rts) {
+    EscapeCommFunction((HANDLE)data->fd, SETRTS);
+  }else{
+    EscapeCommFunction((HANDLE)data->fd, CLRRTS);
+  }
 
-  // bits &= ~(TIOCM_RTS | TIOCM_CTS | TIOCM_DTR | TIOCM_DSR);
-
-  // if (data->rts) {
-  //   bits |= TIOCM_RTS;
-  // }
-
-  // if (data->cts) {
-  //   bits |= TIOCM_CTS;
-  // }
-
-  // if (data->dtr) {
-  //   bits |= TIOCM_DTR;
-  // }
-
-  // if (data->dsr) {
-  //   bits |= TIOCM_DSR;
-  // }
+  if (data->dtr) {
+    EscapeCommFunction((HANDLE)data->fd, SETDTR);
+  }else{
+    EscapeCommFunction((HANDLE)data->fd, CLRDTR);
+  }
 
   //todo check these returns
   if (data->brk) {
-    SetCommBreak(data->fd);
+    SetCommBreak((HANDLE)data->fd);
   }else{
-    ClearCommBreak(data->fd);
+    ClearCommBreak((HANDLE)data->fd);
   }
 
-  data->result = 0;
+  DWORD bits = 0;
 
-  // data->result = ioctl( data->fd, TIOCMSET, &bits );
+  GetCommMask((HANDLE)data->fd, &bits);
+
+  bits &= ~( EV_CTS | EV_DSR);
+  
+  if (data->cts) {
+    bits |= EV_CTS;
+  }
+
+  if (data->dsr) {
+    bits |= EV_DSR;
+  }
+
+  data->result = SetCommMask((HANDLE)data->fd, bits);
 
 }
 
