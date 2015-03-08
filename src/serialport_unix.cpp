@@ -24,6 +24,10 @@ Boolean lockInitialised = FALSE;
 #include <errno.h>
 #endif
 
+#if defined(__OpenBSD__)
+#include <sys/ioctl.h>
+#endif
+
 #if defined(__linux__)
 #include <sys/ioctl.h>
 #include <linux/serial.h>
