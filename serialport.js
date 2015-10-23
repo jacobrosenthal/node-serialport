@@ -572,7 +572,7 @@ function SerialPortFactory(_spfOptions) {
 
       //get only serial port  names
       for (var i = files.length - 1;i>=0;i--){
-        if ((files[i].indexOf('ttyACM') === -1 && files[i].indexOf('ttyUSB') === -1) || !fs.statSync(path.join(dirName,files[i])).isCharacterDevice()){
+        if ((files[i].indexOf('ttyACM') === -1 && files[i].indexOf('ttyUSB') === -1 files[i].indexOf('ttyAMA') === -1) || !fs.statSync(path.join(dirName,files[i])).isCharacterDevice()){
           files.splice(i,1);
         }
       }
